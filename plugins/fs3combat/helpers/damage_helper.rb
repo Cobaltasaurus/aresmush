@@ -88,10 +88,14 @@ module AresMUSH
      def self.healing_skill
        Global.read_config("fs3combat", "healing_skill")
      end
+    
+     def self.healer_adv
+       Global.read_config("fs3combat", "healer_adv")
+     end
      
      def self.max_patients(char)
        rating = FS3Skills.ability_rating(char, FS3Combat.healing_skill)
-       rating / 2
+       (rating / 2) + FS3Skills.ability_rating(char, FS3Combat.healer_adv)
      end
      
      def self.heal_wounds(char)
@@ -135,7 +139,8 @@ module AresMUSH
        
        skill = FS3Combat.treat_skill 
        
-       roll = healer_char_or_npc.roll_ability(skill)
+       healer_adv = FS3Skills.ability_rating(healer_char_or_npc, FS3Combat.healer_adv)
+       roll = healer_char_or_npc.roll_ability(skill, healer_adv)
        successes = roll[:successes]
        
        
